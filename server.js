@@ -11,27 +11,31 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Email configuration (replace with real credentials for production)
+// Root route - serves index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Email configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'owner-of-gym-mail@gmail.com', // <-- CHANGE TO OWNER'S EMAIL
-    pass: 'yourmail-app-password'                // <-- USE GMAIL APP PASSWORD
+    user: process.env.EMAIL_USER || 'owner-of-gym-mail@gmail.com',
+    pass: process.env.EMAIL_PASS || 'yourmail-app-password'
   }
 });
 
 // Endpoint to handle form submission
 app.post('/api/enroll', async (req, res) => {
-  const { weight, height, age, targetWeight, email } = req.body;
+  const { weight, height, age, targetweight, email } = req.body;
 
-  if (!weight || !height || !age || !targetWeight || !email) {
+  if (!weight || !height || !age || !targetweight || !email) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  // Email to gym owner
   const mailOptions = {
-    from: 'youremail@gmail.com',
-    to: 'owner@gmail.com',        // <-- GYM OWNER'S REAL EMAIL
+    from: `"Macho Muscles" <${process.env.EMAIL_USER || 'owner-of-gym-mail@gmail.com'}>`,
+    to: 'nakul2ff07@gmail.com',  // CHANGE THIS to the gym owner's email
     subject: '🔥 NEW CLIENT CONDITION ENROLLMENT 🔥',
     html: `
       <h2>New Macho Muscles client request</h2>
@@ -39,8 +43,8 @@ app.post('/api/enroll', async (req, res) => {
         <li><strong>Current weight:</strong> ${weight} kg</li>
         <li><strong>Height:</strong> ${height} cm</li>
         <li><strong>Age:</strong> ${age}</li>
-        <li><strong>Target weight:</strong> ${targetWeight} kg</li>
-        <li><strong>Gmail address:</strong> ${email}</li>
+        <li><strong>Target weight:</strong> ${targetweight} kg</li>
+        <li><strong>Gmail address for diet:</strong> ${email}</li>
       </ul>
       <p>Contact the client ASAP to schedule a consultation.</p>
     `
@@ -56,5 +60,5 @@ app.post('/api/enroll', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Macho Muscles server running on http://localhost:${PORT}`);
+  console.log(`✅ Macho Muscles server running on port ${PORT}`);
 });
