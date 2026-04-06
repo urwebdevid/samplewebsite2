@@ -35,7 +35,7 @@ app.post('/api/enroll', async (req, res) => {
 
   const mailOptions = {
     from: `"Macho Muscles" <${process.env.EMAIL_USER || 'owner-of-gym-mail@gmail.com'}>`,
-    to: 'nakul2ff07@gmail.com',  // CHANGE THIS to the gym owner's email
+    to: 'ownerofgymmail@gmail.com',  // CHANGE THIS to the gym owner's email
     subject: '🔥 NEW CLIENT CONDITION ENROLLMENT 🔥',
     html: `
       <h2>New Macho Muscles client request</h2>
