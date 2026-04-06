@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Macho Muscles | Enroll Your Condition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: #0f0f0f; color: #eee; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+    .form-card { background: rgba(20,20,20,0.95); backdrop-filter: blur(12px); border-radius: 40px; padding: 2.5rem; max-width: 600px; width: 100%; box-shadow: 0 25px 45px rgba(0,0,0,0.5); border: 1px solid #ff7e0544; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #ffa047; text-align: center; }
+    .sub { text-align: center; margin-bottom: 2rem; color: #aaa; }
+    .input-group { margin-bottom: 1.5rem; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; }
+    input, select { width: 100%; padding: 14px 18px; background: #2a2a2a; border: 1px solid #444; border-radius: 30px; color: white; font-size: 1rem; transition: 0.2s; }
+    input:focus { border-color: #ff7e05; outline: none; box-shadow: 0 0 8px #ff7e05; }
+    button { background: linear-gradient(95deg, #e25822, #ff7e05); width: 100%; padding: 16px; font-weight: 800; font-size: 1.2rem; border: none; border-radius: 60px; color: white; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+    button:hover { transform: scale(1.02); background: linear-gradient(95deg, #ff7e05, #e25822); }
+    .back-link { text-align: center; margin-top: 20px; display: block; color: #ffa047; text-decoration: none; }
+    .error { color: #ff6666; font-size: 0.8rem; margin-top: 5px; display: none; }
+    @media (max-width: 550px) { .form-card { padding: 1.8rem; } }
+  </style>
+</head>
+<body>
+<div class="form-card">
+  <h1><i class="fas fa-dumbbell"></i> ENROLL MY CONDITION</h1>
+  <div class="sub">Tell us where you stand & where you want to go</div>
+  <form id="enrollForm" action="/api/enroll" method="POST">
+    <div class="input-group">
+      <label>Current weight (kg) *</label>
+      <input type="number" step="0.1" name="weight" id="weight" required>
+    </div>
+    <div class="input-group">
+      <label>Height (cm) *</label>
+      <input type="number" step="0.1" name="height" id="height" required>
+    </div>
+    <div class="input-group">
+      <label>Age *</label>
+      <input type="number" name="age" id="age" required>
+    </div>
+    <div class="input-group">
+      <label>Target weight (kg) *</label>
+      <input type="number" step="0.1" name="targetWeight" id="targetWeight" required>
+    </div>
+    <div class="input-group">
+      <label>Gmail address (for diet plan) *</label>
+      <input type="email" name="email" id="email" placeholder="yourname@gmail.com" required>
+    </div>
+    <button type="submit" id="sendBtn"><i class="fas fa-paper-plane"></i> SEND REQUEST</button>
+    <div id="formError" class="error" style="display: none; text-align: center; margin-top: 15px;">Please fill all fields correctly.</div>
+  </form>
+  <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+</div>
+<script>
+  const form = document.getElementById('enrollForm');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const weight = document.getElementById('weight').value.trim();
+    const height = document.getElementById('height').value.trim();
+    const age = document.getElementById('age').value.trim();
+    const targetWeight = document.getElementById('targetWeight').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (!weight || !height || !age || !targetWeight || !email || !email.includes('@')) {
+      document.getElementById('formError').style.display = 'block';
+      return;
+    }
+    document.getElementById('formError').style.display = 'none';
+    const btn = document.getElementById('sendBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Sending...';
+    try {
+      const response = await fetch('/api/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ weight, height, age, targetWeight, email })
+      });
+      if (response.redirected) window.location.href = response.url;
+      else if (!response.ok) throw new Error();
+    } catch (err) {
+      alert('Server error. Please try again later.');
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> SEND REQUEST';
+    }
+  });
+</script>
+</body>
+</html>
