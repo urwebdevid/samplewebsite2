@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Macho Muscles | Elite Gym</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: #0a0a0a; color: #f0f0f0; overflow-x: hidden; }
+    #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; overflow: hidden; }
+    .hero-overlay {
+      position: relative; z-index: 2; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%);
+      backdrop-filter: blur(2px);
+    }
+    .gym-title {
+      font-size: clamp(2.8rem, 10vw, 5.5rem); font-weight: 900; letter-spacing: 6px;
+      background: linear-gradient(135deg, #ffcc33, #ff8c00, #ff2e00);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      margin-bottom: 1rem; animation: fadeInUp 1s ease-out;
+    }
+    .tagline { font-size: 1.2rem; letter-spacing: 2px; font-weight: 500; color: #f5b642; margin-bottom: 1rem; }
+    .specialty-text {
+      max-width: 750px; margin: 2rem auto; font-size: 1.1rem; line-height: 1.6; padding: 20px;
+      background: rgba(0,0,0,0.6); border-radius: 30px; backdrop-filter: blur(8px);
+    }
+    .btn-enroll {
+      display: inline-block; background: linear-gradient(95deg, #e25822, #ff7e05); border: none;
+      padding: 16px 42px; font-size: 1.3rem; font-weight: 800; color: #fff; text-transform: uppercase;
+      border-radius: 60px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 12px;
+    }
+    .btn-enroll:hover { transform: scale(1.05); background: linear-gradient(95deg, #ff7e05, #e25822); }
+    .features-banner { background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); padding: 50px 20px; width: 100%; margin-top: 80px; }
+    .features-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; max-width: 1200px; margin: 0 auto; }
+    .feature-item { flex: 1 1 250px; text-align: center; padding: 20px; background: rgba(20,20,20,0.7); border-radius: 20px; }
+    .feature-item i { font-size: 2.5rem; color: #ff7e05; margin-bottom: 15px; }
+    footer { background: #030303dd; text-align: center; padding: 30px; font-size: 0.8rem; border-top: 1px solid #ff7e0533; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    nav { position: fixed; top: 0; width: 100%; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
+    nav .logo { font-weight: 800; font-size: 1.5rem; color: #ffa047; }
+    nav a { color: white; text-decoration: none; margin-left: 30px; font-weight: 500; transition: 0.2s; }
+    nav a:hover { color: #ff7e05; }
+    @media (max-width: 650px) { nav { padding: 15px 20px; } nav a { margin-left: 15px; font-size: 0.8rem; } }
+  </style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<nav>
+  <div class="logo"><i class="fas fa-dumbbell"></i> MACHO MUSCLES</div>
+  <div class="nav-links">
+    <a href="index.html">HOME</a>
+    <a href="condition.html">ENROLL</a>
+  </div>
+</nav>
+<div class="hero-overlay">
+  <div class="gym-title">MACHO MUSCLES</div>
+  <div class="tagline">FORGE THE UNBREAKABLE</div>
+  <div class="specialty-text">
+    <strong>⚡ OUR SPECIALTY: SCIENTIFIC HYPERTROPHY & METABOLIC CONDITIONING ⚡</strong><br><br>
+    No stock photos — just raw biomechanics, AI‑powered form tracking, and elite equipment. We don’t just train you; we engineer your peak. Every member receives a custom blueprint: strength, endurance, mobility — fused with nutritional precision.
+  </div>
+  <a href="condition.html" class="btn-enroll"><i class="fas fa-heartbeat"></i> ENROLL MY CONDITION <i class="fas fa-arrow-right"></i></a>
+  <div class="features-banner">
+    <div class="features-grid">
+      <div class="feature-item"><i class="fas fa-chart-line"></i><h3>AI Biomechanics</h3><p>Real‑time form correction</p></div>
+      <div class="feature-item"><i class="fas fa-dumbbell"></i><h3>Raw Iron Temple</h3><p>Eleiko, Rogue, Prime</p></div>
+      <div class="feature-item"><i class="fas fa-apple-alt"></i><h3>Precision Fueling</h3><p>Tailored macro plans</p></div>
+    </div>
+  </div>
+  <footer><p>© 2026 MACHO MUSCLES — No compromise. Just results.</p></footer>
+</div>
+
+<script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.128.0/build/three.module.js" } }
+</script>
+<script type="module">
+  import * as THREE from 'three';
+  const container = document.getElementById('canvas-container');
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x030303); scene.fog = new THREE.FogExp2(0x030303, 0.012);
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.shadowMap.enabled = true; container.appendChild(renderer.domElement);
+  // Lights
+  const ambient = new THREE.AmbientLight(0x222222); scene.add(ambient);
+  const main = new THREE.DirectionalLight(0xffaa66, 1.2); main.position.set(3,5,2); main.castShadow=true; scene.add(main);
+  const fill = new THREE.PointLight(0x445566,0.6); fill.position.set(-2,3,4); scene.add(fill);
+  const back = new THREE.PointLight(0xff6600,0.5); back.position.set(0,2,-5); scene.add(back);
+  // Equipment group
+  const eqGroup = new THREE.Group();
+  const barGeo = new THREE.CylinderGeometry(0.12,0.12,2.2,16); const barMat = new THREE.MeshStandardMaterial({color:0xccccdd, metalness:0.85}); const bar = new THREE.Mesh(barGeo,barMat); bar.rotation.z=Math.PI/2; bar.castShadow=true; eqGroup.add(bar);
+  const plateMat = new THREE.MeshStandardMaterial({color:0xcc5533, metalness:0.7}); for(let i=0;i<3;i++){ let p=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,0.12,32),plateMat); p.position.set(-1.1-i*0.22,0,0); p.rotation.x=Math.PI/2; eqGroup.add(p); }
+  for(let i=0;i<3;i++){ let p=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,0.12,32),plateMat); p.position.set(1.1+i*0.22,0,0); p.rotation.x=Math.PI/2; eqGroup.add(p); }
+  const handleGeo=new THREE.CylinderGeometry(0.1,0.1,0.8,8); const handleMat=new THREE.MeshStandardMaterial({color:0xbbaa99}); const dh=new THREE.Mesh(handleGeo,handleMat); dh.rotation.z=Math.PI/2; dh.position.set(-1.8,0.4,0.6); eqGroup.add(dh);
+  const sphereMat=new THREE.MeshStandardMaterial({color:0xdd6644}); const s1=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16),sphereMat); s1.position.set(-2.2,0.4,0.6); eqGroup.add(s1);
+  const s2=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16),sphereMat); s2.position.set(-1.4,0.4,0.6); eqGroup.add(s2);
+  const dh2=new THREE.Mesh(handleGeo,handleMat); dh2.rotation.z=Math.PI/2; dh2.position.set(1.8,0.3,-0.7); eqGroup.add(dh2);
+  const s3=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16),sphereMat); s3.position.set(1.4,0.3,-0.7); eqGroup.add(s3);
+  const s4=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16),sphereMat); s4.position.set(2.2,0.3,-0.7); eqGroup.add(s4);
+  const kettle=new THREE.Mesh(new THREE.SphereGeometry(0.35,32,32),new THREE.MeshStandardMaterial({color:0xaa7755})); kettle.position.set(-0.6,-0.2,1.2); eqGroup.add(kettle);
+  scene.add(eqGroup);
+  const particles=new THREE.Points(new THREE.BufferGeometry(),new THREE.PointsMaterial({color:0xff8833,size:0.05})); const pos=[]; for(let i=0;i<600;i++){ pos.push((Math.random()-0.5)*30,(Math.random()-0.5)*15,(Math.random()-0.5)*20-10); } particles.geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(pos),3)); scene.add(particles);
+  camera.position.set(1.2,1.8,3.2); camera.lookAt(0,0.2,0);
+  let start=performance.now(), zoomed=false;
+  function animateZoom(now){ let t=Math.min(1,(now-start)/3800); let e=1-Math.pow(1-t,3); camera.position.set(1.2+(2.8-1.2)*e, 1.8+(2.5-1.8)*e, 3.2+(7.2-3.2)*e); camera.lookAt(0,0.4,0); if(t>=1) zoomed=true; }
+  let angle=0;
+  function animate(){ let n=performance.now(); if(!zoomed) animateZoom(n); else { angle+=0.002; camera.position.x=2.2+Math.sin(angle)*2.2; camera.position.z=7.2-0.8+Math.cos(angle)*1.2; camera.position.y=2.3+Math.sin(angle*0.5)*0.2; camera.lookAt(0,0.5,0); } particles.rotation.y+=0.002; eqGroup.children.forEach(c=>{if(c.isMesh && c!==bar) c.rotation.y=Math.sin(Date.now()*0.002)*0.03;}); bar.rotation.z+=0.005; renderer.render(scene,camera); requestAnimationFrame(animate); } animate();
+  window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth,window.innerHeight);});
+</script>
+</body>
+</html>
