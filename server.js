@@ -1,3 +1,5 @@
+require('dotenv').config();  // Load variables from .env file
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
@@ -16,26 +18,27 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Email configuration
+// Email configuration using environment variables
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER || 'owner-of-gym-mail@gmail.com',
-    pass: process.env.EMAIL_PASS || 'yourmail-app-password'
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
 
 // Endpoint to handle form submission
 app.post('/api/enroll', async (req, res) => {
-  const { weight, height, age, targetweight, email } = req.body;
+  const { weight, height, age, targetWeight, email } = req.body;
 
-  if (!weight || !height || !age || !targetweight || !email) {
+  // Validate all fields
+  if (!weight || !height || !age || !targetWeight || !email) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   const mailOptions = {
-    from: `"Macho Muscles" <${process.env.EMAIL_USER || 'owner-of-gym-mail@gmail.com'}>`,
-    to: 'ownerofgymmail@gmail.com',  // CHANGE THIS to the gym owner's email
+    from: `"Macho Muscles" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_TO,
     subject: '🔥 NEW CLIENT CONDITION ENROLLMENT 🔥',
     html: `
       <h2>New Macho Muscles client request</h2>
@@ -43,7 +46,7 @@ app.post('/api/enroll', async (req, res) => {
         <li><strong>Current weight:</strong> ${weight} kg</li>
         <li><strong>Height:</strong> ${height} cm</li>
         <li><strong>Age:</strong> ${age}</li>
-        <li><strong>Target weight:</strong> ${targetweight} kg</li>
+        <li><strong>Target weight:</strong> ${targetWeight} kg</li>
         <li><strong>Gmail address for diet:</strong> ${email}</li>
       </ul>
       <p>Contact the client ASAP to schedule a consultation.</p>
