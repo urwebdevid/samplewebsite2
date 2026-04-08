@@ -6,15 +6,17 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// Root route – serves homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// *** SAFE: Read credentials from environment variables ***
+// Email configuration – reads credentials from Render environment variables
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -22,7 +24,8 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
-// Endpoint to handle form submission
+
+// Handle enrollment form submission
 app.post('/api/enroll', async (req, res) => {
   const { weight, height, age, targetWeight, email } = req.body;
 
@@ -55,6 +58,8 @@ app.post('/api/enroll', async (req, res) => {
     res.status(500).send('Server error – could not send notification.');
   }
 });
+
+// Start the server
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Macho Muscles server running on port ${PORT}`);
 });
