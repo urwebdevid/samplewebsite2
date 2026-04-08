@@ -1,5 +1,3 @@
-require('dotenv').config();  // Load variables from .env file
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
@@ -8,17 +6,15 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Root route - serves index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Email configuration using environment variables
+// *** SAFE: Read credentials from environment variables ***
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -26,12 +22,10 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
-
 // Endpoint to handle form submission
 app.post('/api/enroll', async (req, res) => {
   const { weight, height, age, targetWeight, email } = req.body;
 
-  // Validate all fields
   if (!weight || !height || !age || !targetWeight || !email) {
     return res.status(400).json({ error: 'All fields are required' });
   }
@@ -61,7 +55,6 @@ app.post('/api/enroll', async (req, res) => {
     res.status(500).send('Server error – could not send notification.');
   }
 });
-
 app.listen(PORT, () => {
-  console.log(`✅ Macho Muscles server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
