@@ -11,17 +11,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Root route – serves homepage
+// Root route - serves index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Email configuration – reads credentials from Render environment variables
+// Email configuration using Zoho Mail SMTP
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: process.env.EMAIL_HOST,      // smtp.zoho.com
+  port: process.env.EMAIL_PORT,      // 587
+  secure: false,                     // false for port 587 (STARTTLS)
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: process.env.EMAIL_USER,    // your full Zoho email address
+    pass: process.env.EMAIL_PASS     // your 16-character app password
+  },
+  tls: {
+    rejectUnauthorized: false        // optional, helps avoid certificate issues
   }
 });
 
